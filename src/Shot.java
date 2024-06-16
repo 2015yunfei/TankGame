@@ -20,10 +20,36 @@ public class Shot implements Runnable {
         this.direct = direct;
     }
 
+    public Shot(int direct, Tank tank) {
+        this.direct = direct;
+        switch (direct) {
+            //得到Hero对象方向
+            case 0 -> // 向上
+            {
+                this.x = tank.getX() + 20;
+                this.y = tank.getY();
+            }
+            case 1 -> // 向右
+            {
+                this.x = tank.getX() + 60;
+                this.y = tank.getY() + 20;
+            }
+            case 2 -> // 向下
+            {
+                this.x = tank.getX() + 20;
+                this.y = tank.getY() + 60;
+            }
+            case 3 -> // 向左
+            {
+                this.x = tank.getX();
+                this.y = tank.getY() + 20;
+            }
+        }
+    }
+
     @Override
     public void run() {//射击
         while (true) {
-
             //休眠 50毫秒
             try {
                 Thread.sleep(50);

@@ -25,22 +25,10 @@ public class EnemyTank extends Tank implements Runnable {
     @Override
     public void run() {
         while (true) {
-
-            //这里我们判断如果shots size() =0, 创建一颗子弹，放入到
-            //shots集合，并启动
+            //这里我们判断如果shots size() =0, 创建一颗子弹，放入到shots集合，并启动
             if (isLive && shots.size() < 4) {
-                Shot s = switch (getDirect()) {
-                    case 0 -> new Shot(getX() + 20, getY(), 0);
-                    case 1 -> new Shot(getX() + 60, getY() + 20, 1);
-                    case 2 -> //向下
-                            new Shot(getX() + 20, getY() + 60, 2);
-                    case 3 ->//向左
-                            new Shot(getX(), getY() + 20, 3);
-                    default -> null;
-                    //判断坦克的方向，创建对应的子弹
-                };
+                Shot s = new Shot(getDirect(), this);
                 shots.add(s);
-                //启动
                 new Thread(s).start();
             }
 
@@ -110,6 +98,7 @@ public class EnemyTank extends Tank implements Runnable {
                 break; //退出线程.
             }
         }
+
     }
 
     //编写方法，判断当前的这个敌人坦克，是否和 enemyTanks 中的其他坦克发生的重叠或者碰撞

@@ -21,19 +21,7 @@ public class Hero extends Tank {
             return;
         }
 
-        Shot s = switch (getDirect()) {
-            //得到Hero对象方向
-            case 0 -> //向上
-                    new Shot(getX() + 20, getY(), 0);
-            case 1 -> //向右
-                    new Shot(getX() + 60, getY() + 20, 1);
-            case 2 -> //向下
-                    new Shot(getX() + 20, getY() + 60, 2);
-            case 3 -> //向左
-                    new Shot(getX(), getY() + 20, 3);
-            default -> null;
-            //创建 Shot 对象, 根据当前Hero对象的位置和方向来创建Shot
-        };
+        Shot s = new Shot(getDirect(),this);
 
         //把新创建的shot放入到shots
         shots.add(s);
