@@ -41,7 +41,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         }
 
 
-        nodes = Recorder.getNodesAndEnemyTankRec();
+        //nodes = Recorder.getNodesAndEnemyTankRec();
         hero = new Hero(500, 100);//初始化自己坦克
 
         Recorder.setEnemyTanks(enemyTanks);
@@ -69,6 +69,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 }
                 break;
             case "2": //继续上局游戏
+                System.out.println(nodes.size());
                 //初始化敌人坦克
                 for (int i = 0; i < nodes.size(); i++) {
                     Node node = nodes.get(i);
@@ -134,15 +135,16 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
             drawTank(hero.getX(), hero.getY(), g, hero.getDirect(), 1);
         }
 
-
         //将hero的子弹集合 shots ,遍历取出绘制
-        for (int i = 0; i < hero.shots.size(); i++) {
-            Shot shot = hero.shots.get(i);
-            if (shot != null && shot.isLive) {
-                g.draw3DRect(shot.x, shot.y, 1, 1, false);
+        if (hero != null) {
+            for (int i = 0; i < hero.shots.size(); i++) {
+                Shot shot = hero.shots.get(i);
+                if (shot != null && shot.isLive) {
+                    g.draw3DRect(shot.x, shot.y, 1, 1, false);
 
-            } else {//如果该shot对象已经无效 ,就从shots集合中拿掉
-                hero.shots.remove(shot);
+                } else {//如果该shot对象已经无效 ,就从shots集合中拿掉
+                    hero.shots.remove(shot);
+                }
             }
         }
 
@@ -269,19 +271,11 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
 
         //如果用户按下的是J,就发射
         if (e.getKeyCode() == KeyEvent.VK_J) {
-
-            //判断hero的子弹是否销毁,发射一颗子弹
-//            if (hero.shot == null || !hero.shot.isLive) {
-//                hero.shotEnemyTank();
-//            }
-
             //发射多颗子弹
             hero.shotEnemyTank();
-
         }
         //让面板重绘
         this.repaint();
-
     }
 
     @Override
@@ -316,7 +310,6 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     //所有的子弹，都取出和敌人的所有坦克，进行判断
     //老韩给的部分代码..
     public void hitEnemyTank() {
-
         //遍历我们的子弹
         for (int j = 0; j < hero.shots.size(); j++) {
             Shot shot = hero.shots.get(j);
@@ -353,7 +346,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
 
     //编写方法，判断我方的子弹是否击中敌人坦克.
     //什么时候判断 我方的子弹是否击中敌人坦克 ? run方法
-    //后面我们将 enemyTank 改成 tank名称
+    //后面将 enemyTank 改成 tank名称
     public void hitTank(Shot s, Tank enemyTank) {
         //判断s 击中坦克
         switch (enemyTank.getDirect()) {

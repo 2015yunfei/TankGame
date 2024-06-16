@@ -37,7 +37,6 @@ public class Hero extends Tank {
 
         //把新创建的shot放入到shots
         shots.add(s);
-        //启动我们的Shot线程
         new Thread(s).start();
     }
 }

@@ -1,17 +1,21 @@
 import java.io.*;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：2015yunfei
  * @date ：Created in 2024/6/12 15:53
  */
 public class Recorder {
+    static Logger logger = Logger.getLogger("Recorder");  // 类名或应用名作为日志记录器的名称
+
     //定义变量，记录我方击毁敌人坦克数
     private static int allEnemyTankNum = 0;
     //定义IO对象, 准备写数据到文件中
     private static BufferedWriter bw = null;
     private static BufferedReader br = null;
-    private static String recordFile = "src\\myRecord.txt";
+    private static final String recordFile = "src\\myRecord.txt";
     //定义Vector ,指向 MyPanel 对象的 敌人坦克Vector
     private static Vector<EnemyTank> enemyTanks = null;
     //定义一个Node 的Vector ,用于保存敌人的信息node
@@ -40,14 +44,16 @@ public class Recorder {
                 nodes.add(node);//放入nodes Vector
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // 使用logger来记录错误信息
+            logger.log(Level.SEVERE, "An IO exception occurred", e);
         } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                // 使用logger来记录错误信息
+                logger.log(Level.SEVERE, "An IO exception occurred", e);
             }
         }
         return nodes;
@@ -73,14 +79,16 @@ public class Recorder {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // 使用logger来记录错误信息
+            logger.log(Level.SEVERE, "An IO exception occurred", e);
         } finally {
             try {
                 if (bw != null) {
                     bw.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                // 使用logger来记录错误信息
+                logger.log(Level.SEVERE, "An IO exception occurred", e);
             }
         }
     }

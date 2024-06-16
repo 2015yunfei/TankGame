@@ -1,8 +1,12 @@
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author ：2015yunfei
  * @date ：Created in 2024/6/11 15:18
  */
 public class Shot implements Runnable {
+    Logger logger = Logger.getLogger("Shot");  // 类名或应用名作为日志记录器的名称
     int x; //子弹x坐标
     int y; //子弹y坐标
     int direct = 0; //子弹方向
@@ -24,7 +28,8 @@ public class Shot implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // 使用logger来记录错误信息
+                logger.log(Level.SEVERE, "An interrupted exception occurred", e);
             }
 
             switch (direct) {
@@ -42,7 +47,7 @@ public class Shot implements Runnable {
                     break;
             }
 
-            System.out.println("子弹 x=" + x + " y=" + y);
+            // System.out.println("子弹 x=" + x + " y=" + y);
 
             if (!(x >= 0 && x <= 1000 && y >= 0 && y <= 750 && isLive)) {
                 System.out.println("子弹线程退出");
