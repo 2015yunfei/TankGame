@@ -31,7 +31,16 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         //先判断记录的文件是否存在
         File file = new File(Recorder.getRecordFile());
         if (file.exists()) {
-            nodes = Recorder.getNodesAndEnemyTankRec();
+            if (key.equals("1")){
+                boolean flag= file.delete();
+                if(flag){
+                    System.out.println("删除之前的记录");
+                }else{
+                    System.out.println("之前没有记录");
+                }
+            }else{
+                nodes = Recorder.getNodesAndEnemyTankRec();
+            }
         } else {
             System.out.println("文件不存在，只能开启新的游戏");
             key = "1";
@@ -66,8 +75,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
             case "2": //继续上局游戏
                 System.out.println(nodes.size());
                 //初始化敌人坦克
-                for (int i = 0; i < nodes.size(); i++) {
-                    Node node = nodes.get(i);
+                for (Node node : nodes) {
                     //创建一个敌人的坦克
                     EnemyTank enemyTank = new EnemyTank(node.getX(), node.getY());
                     //将 enemyTanks 设置给 enemyTank
