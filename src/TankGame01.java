@@ -24,7 +24,7 @@ public class TankGame01 extends JFrame {
         thread.start();
         //把面板(就是游戏的绘图区域)
         this.add(mp);
-        this.setSize(1300, 950);
+        this.setSize(1300, 750);
         this.setVisible(true);
         this.addKeyListener(mp);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

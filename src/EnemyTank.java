@@ -25,15 +25,14 @@ public class EnemyTank extends Tank implements Runnable {
     @Override
     public void run() {
         while (true) {
-            //这里我们判断如果shots size() =0, 创建一颗子弹，放入到shots集合，并启动
+            //判断如果shots size() =0, 创建一颗子弹，放入到shots集合，并启动线程
             if (isLive && shots.size() < 4) {
                 Shot s = new Shot(getDirect(), this);
                 shots.add(s);
                 new Thread(s).start();
             }
 
-
-            //根据坦克的方向来继续激动
+            //根据坦克的方向来继续移动
             switch (getDirect()) {
                 case 0:  //向上
                     //让坦克保持一个方向，走30步
@@ -91,19 +90,19 @@ public class EnemyTank extends Tank implements Runnable {
                     break;
             }
 
-            //然后随机的改变坦克方向 0-3
+            // 然后随机的改变坦克方向 0-3
             setDirect((int) (Math.random() * 4));
-            //写并发程序，一定要考虑清楚，该线程什么时候结束
+            // 写并发程序，一定要考虑清楚，该线程什么时候结束
             if (!isLive) {
-                break; //退出线程.
+                break; //退出线程
             }
         }
 
     }
 
-    //编写方法，判断当前的这个敌人坦克，是否和 enemyTanks 中的其他坦克发生的重叠或者碰撞
+    // 判断当前的这个敌人坦克，是否和 enemyTanks 中的其他坦克发生的重叠或者碰撞
     public boolean isTouchEnemyTank() {
-        //判断当前敌人坦克(this) 方向
+        // 判断当前敌人坦克(this)方向
         switch (this.getDirect()) {
             case 0: //上
                 for (int i = 0; i < enemyTanks.size(); i++) {
