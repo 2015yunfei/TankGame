@@ -246,7 +246,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyCode());
+        // System.out.println(e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_W) {//按下W键
             //改变坦克的方向
             hero.setDirect(0);//

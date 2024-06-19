@@ -76,7 +76,8 @@ public class Shot implements Runnable {
             // System.out.println("子弹 x=" + x + " y=" + y);
 
             if (!(x >= 0 && x <= 1000 && y >= 0 && y <= 750 && isLive)) {
-                System.out.println("子弹线程退出");
+                String threadName = Thread.currentThread().getName();
+                System.out.println("子弹线程退出" + "_当前线程名称：" + threadName);
                 isLive = false;
                 break;
             }
