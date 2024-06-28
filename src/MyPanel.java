@@ -44,6 +44,10 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 }
             } else {
                 nodes = Recorder.getNodesAndEnemyTankRec();
+                if (nodes.isEmpty()) {
+                    System.out.println("上局游戏已经胜利！\n重新开始游戏！");
+                    key = "1";
+                }
             }
         } else {
             System.out.println("文件不存在，只能开启新的游戏");
@@ -353,41 +357,37 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     //什么时候判断 我方的子弹是否击中敌人坦克 ? run方法
     //后面将 enemyTank 改成 tank名称
     public void hitTank(Shot s, Tank enemyTank) {
-        //判断s 击中坦克
+        //判断 s 是否击中坦克
+        boolean flag = false;
+
         switch (enemyTank.getDirect()) {
             case DOWN, UP: //坦克向下
                 if (s.x > enemyTank.getX() && s.x < enemyTank.getX() + 40
                         && s.y > enemyTank.getY() && s.y < enemyTank.getY() + 60) {
-                    s.isLive = false;
-                    enemyTank.isLive = false;
-                    //当我的子弹击中敌人坦克后，将enemyTank 从Vector 拿掉
-                    enemyTanks.remove(enemyTank);
-                    //当我方击毁一个敌人坦克时，就对数据allEnemyTankNum++
-                    //解读, 因为 enemyTank 可以是 Hero 也可以是 EnemyTank
-                    if (enemyTank instanceof EnemyTank) {
-                        Recorder.addHasDestroyedTanks();
-                    }
-                    //创建Bomb对象，加入到bombs集合
-                    Bomb bomb = new Bomb(enemyTank.getX(), enemyTank.getY());
-                    bombs.add(bomb);
+                    flag = true;
                 }
                 break;
             case LEFT, RIGHT: //坦克向左向右
                 if (s.x > enemyTank.getX() && s.x < enemyTank.getX() + 60
                         && s.y > enemyTank.getY() && s.y < enemyTank.getY() + 40) {
-                    s.isLive = false;
-                    enemyTank.isLive = false;
-                    //当我的子弹击中敌人坦克后，将enemyTank 从Vector 拿掉
-                    enemyTanks.remove(enemyTank);
-                    //解读, 因为 enemyTank 可以是 Hero 也可以是 EnemyTank
-                    if (enemyTank instanceof EnemyTank) {
-                        Recorder.addHasDestroyedTanks();
-                    }
-                    //创建Bomb对象，加入到bombs集合
-                    Bomb bomb = new Bomb(enemyTank.getX(), enemyTank.getY());
-                    bombs.add(bomb);
+                    flag = true;
                 }
                 break;
+        }
+        if (flag) {
+            s.isLive = false;
+            enemyTank.isLive = false;
+
+            //当我的子弹击中敌人坦克后，将enemyTank 从Vector 拿掉
+            enemyTanks.remove(enemyTank);
+            //当我方击毁一个敌人坦克时，就对数据allEnemyTankNum++
+            //解读, 因为 enemyTank 可以是 Hero 也可以是 EnemyTank
+            if (enemyTank instanceof EnemyTank) {
+                Recorder.addHasDestroyedTanks();
+            }
+            //创建Bomb对象，加入到bombs集合
+            Bomb bomb = new Bomb(enemyTank.getX(), enemyTank.getY());
+            bombs.add(bomb);
         }
     }
 }

@@ -16,8 +16,22 @@ public class TankGame01 extends JFrame {
     }
 
     public TankGame01() {
-        System.out.println("请输入选择 1: 新游戏 2: 继续上局");
-        String key = scanner.next();
+        Scanner scanner = new Scanner(System.in);
+        String key;
+
+        while (true) {
+            System.out.println("请输入选择 1: 新游戏 2: 继续上局");
+            key = scanner.next();
+
+            if ("1".equals(key) || "2".equals(key)) {
+                // 如果输入是 "1" 或 "2"，则跳出循环
+                break;
+            } else {
+                // 如果输入不是 "1" 或 "2"，则打印错误信息并继续循环
+                System.out.println("无效的输入，请输入 1 或 2。");
+            }
+        }
+
         mp = new MyPanel(key);
         //将mp 放入到Thread ,并启动
         Thread thread = new Thread(mp);
