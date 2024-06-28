@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * @date ：Created in 2024/6/12 15:53
  */
 public class Recorder {
-    static Logger logger = Logger.getLogger("Recorder");  // 类名或应用名作为日志记录器的名称
+    static Logger logger = Logger.getLogger(Recorder.class.getName());  // 类名或应用名作为日志记录器的名称
 
     //定义变量，记录我方击毁敌人坦克数
     private static int hasDestroyedTanks = 0;
@@ -36,11 +36,16 @@ public class Recorder {
             br = new BufferedReader(new FileReader(recordFile));
             hasDestroyedTanks = Integer.parseInt(br.readLine());
             //循环读取文件，生成nodes 集合
-            String line = "";//255 40 0
+            String line = "";//255 40 UP
             while ((line = br.readLine()) != null) {
                 String[] xyd = line.split(" ");
-                Node node = new Node(Integer.parseInt(xyd[0]), Integer.parseInt(xyd[1]),
-                        Integer.parseInt(xyd[2]));
+
+                Node node = null;
+                try {
+                    node = new Node(Integer.parseInt(xyd[0]), Integer.parseInt(xyd[1]), xyd[2]);
+                } catch (IllegalStateException | NumberFormatException e) {
+                    System.out.println("保存失败" + e.toString());
+                }
                 nodes.add(node);//放入nodes Vector
             }
         } catch (IOException e) {

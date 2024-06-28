@@ -5,12 +5,18 @@
 public class Node {
     private int x;
     private int y;
-    private int direct;
+    private Directions direct;
 
-    public Node(int x, int y, int direct) {
+    public Node(int x, int y, String direct) throws IllegalStateException {
         this.x = x;
         this.y = y;
-        this.direct = direct;
+        this.direct = switch (direct){
+            case "UP"->Directions.UP;
+            case "DOWN"->Directions.DOWN;
+            case "RIGHT"->Directions.RIGHT;
+            case "LEFT"->Directions.LEFT;
+            default -> throw new IllegalStateException("Unexpected value: " + direct);
+        };
     }
 
     public int getX() {
@@ -29,11 +35,11 @@ public class Node {
         this.y = y;
     }
 
-    public int getDirect() {
+    public Directions getDirect() {
         return direct;
     }
 
-    public void setDirect(int direct) {
+    public void setDirect(Directions direct) {
         this.direct = direct;
     }
 }

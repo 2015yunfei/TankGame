@@ -3,7 +3,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 /**
  * @author ：2015yunfei
@@ -11,10 +13,12 @@ import java.util.Vector;
  * 坦克大战的绘图区域
  */
 public class MyPanel extends JPanel implements KeyListener, Runnable {
+    private static final Logger logger = Logger.getLogger(MyPanel.class.getName());
+
     //定义一个存放Node 对象的Vector, 用于恢复敌人坦克的坐标和方向
     Vector<Node> nodes = new Vector<>();
 
-    Hero hero = null;
+    Hero hero;
     Vector<EnemyTank> enemyTanks = new Vector<>();
     int enemyTankSize = 3;
 
@@ -23,22 +27,22 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     Vector<Bomb> bombs = new Vector<>();
 
     //定义三张炸弹图片，用于显示爆炸效果
-    Image image1 = null;
-    Image image2 = null;
-    Image image3 = null;
+    Image image1;
+    Image image2;
+    Image image3;
 
     public MyPanel(String key) {
         //先判断记录的文件是否存在
         File file = new File(Recorder.getRecordFile());
         if (file.exists()) {
-            if (key.equals("1")){
-                boolean flag= file.delete();
-                if(flag){
+            if (key.equals("1")) {
+                boolean flag = file.delete();
+                if (flag) {
                     System.out.println("删除之前的记录");
-                }else{
+                } else {
                     System.out.println("之前没有记录");
                 }
-            }else{
+            } else {
                 nodes = Recorder.getNodesAndEnemyTankRec();
             }
         } else {
@@ -58,8 +62,6 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                     EnemyTank enemyTank = new EnemyTank((100 * (i + 1)), 0);
                     //将 enemyTanks 设置给 enemyTank !!!
                     enemyTank.setEnemyTanks(enemyTanks);
-                    //设置方向
-                    enemyTank.setDirect(2);
                     //启动敌人坦克线程，让他动起来
                     new Thread(enemyTank).start();
                     //给该enemyTank 加入一颗子弹
@@ -104,7 +106,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         image3 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/bomb_3.gif"));
 
         //这里，播放指定的音乐
-        new AePlayWave("src\\111.wav").start();
+        new AePlayWave("src\\bgm.wav").start();
     }
 
 
@@ -116,7 +118,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         g.setFont(font);
 
         g.drawString("您累积击毁敌方坦克", 1020, 30);
-        drawTank(1020, 60, g, 0, 0);//画出一个敌方坦克
+        drawTank(1020, 60, g, Directions.UP, 0);//画出一个敌方坦克
         g.setColor(Color.BLACK);//这里需要重新设置成黑色
         g.drawString(Recorder.getHasDestroyedTanks() + "", 1080, 100);
     }
@@ -193,7 +195,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
      * @param direct 坦克的方向
      * @param type   坦克的类型
      */
-    public void drawTank(int x, int y, Graphics g, int direct, int type) {
+    public void drawTank(int x, int y, Graphics g, Directions direct, int type) {
         // 根据坦克的类型设置不同的颜色
         switch (type) {
             case 0: //主角的坦克
@@ -206,28 +208,28 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         //根据坦克方向，来绘制对应形状坦克
         //direct 表示方向(0:向上 1:向右 2:向下 3:向左)
         switch (direct) {
-            case 0: //表示向上
+            case UP: //表示向上
                 g.fill3DRect(x, y, 10, 60, false);//画出坦克左边轮子
                 g.fill3DRect(x + 30, y, 10, 60, false);//画出坦克右边轮子
                 g.fill3DRect(x + 10, y + 10, 20, 40, false);//画出坦克盖子
                 g.fillOval(x + 10, y + 20, 20, 20);//画出圆形盖子
                 g.drawLine(x + 20, y + 30, x + 20, y);//画出炮筒
                 break;
-            case 1: //表示向右
+            case RIGHT: //表示向右
                 g.fill3DRect(x, y, 60, 10, false);//画出坦克上边轮子
                 g.fill3DRect(x, y + 30, 60, 10, false);//画出坦克下边轮子
                 g.fill3DRect(x + 10, y + 10, 40, 20, false);//画出坦克盖子
                 g.fillOval(x + 20, y + 10, 20, 20);//画出圆形盖子
                 g.drawLine(x + 30, y + 20, x + 60, y + 20);//画出炮筒
                 break;
-            case 2: //表示向下
+            case DOWN: //表示向下
                 g.fill3DRect(x, y, 10, 60, false);//画出坦克左边轮子
                 g.fill3DRect(x + 30, y, 10, 60, false);//画出坦克右边轮子
                 g.fill3DRect(x + 10, y + 10, 20, 40, false);//画出坦克盖子
                 g.fillOval(x + 10, y + 20, 20, 20);//画出圆形盖子
                 g.drawLine(x + 20, y + 30, x + 20, y + 60);//画出炮筒
                 break;
-            case 3: //表示向左
+            case LEFT: //表示向左
                 g.fill3DRect(x, y, 60, 10, false);//画出坦克上边轮子
                 g.fill3DRect(x, y + 30, 60, 10, false);//画出坦克下边轮子
                 g.fill3DRect(x + 10, y + 10, 40, 20, false);//画出坦克盖子
@@ -249,24 +251,24 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         // System.out.println(e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_W) {//按下W键
             //改变坦克的方向
-            hero.setDirect(0);//
+            hero.setDirect(Directions.UP);
             //修改坦克的坐标 y -= 1
             if (hero.getY() > 0) {
                 hero.moveUp();
             }
         } else if (e.getKeyCode() == KeyEvent.VK_D) {//D键, 向右
-            hero.setDirect(1);
+            hero.setDirect(Directions.RIGHT);
             if (hero.getX() + 60 < 1000) {
                 hero.moveRight();
             }
 
         } else if (e.getKeyCode() == KeyEvent.VK_S) {//S键
-            hero.setDirect(2);
+            hero.setDirect(Directions.DOWN);
             if (hero.getY() + 60 < 750) {
                 hero.moveDown();
             }
         } else if (e.getKeyCode() == KeyEvent.VK_A) {//A键
-            hero.setDirect(3);
+            hero.setDirect(Directions.LEFT);
             if (hero.getX() > 0) {
                 hero.moveLeft();
             }
@@ -298,7 +300,9 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // 使用日志记录异常
+                logger.severe(e.getMessage());
+                logger.severe(Arrays.toString(e.getStackTrace()));
             }
             //判断是我们子弹否击中了敌人坦克
             hitEnemyTank();
@@ -311,7 +315,6 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     //如果我们的坦克可以发射多个子弹
     //在判断我方子弹是否击中敌人坦克时，就需要把我们的子弹集合中
     //所有的子弹，都取出和敌人的所有坦克，进行判断
-    //老韩给的部分代码..
     public void hitEnemyTank() {
         //遍历我们的子弹
         for (int j = 0; j < hero.shots.size(); j++) {
@@ -352,8 +355,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     public void hitTank(Shot s, Tank enemyTank) {
         //判断s 击中坦克
         switch (enemyTank.getDirect()) {
-            case 0: //坦克向上
-            case 2: //坦克向下
+            case DOWN, UP: //坦克向下
                 if (s.x > enemyTank.getX() && s.x < enemyTank.getX() + 40
                         && s.y > enemyTank.getY() && s.y < enemyTank.getY() + 60) {
                     s.isLive = false;
@@ -370,8 +372,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                     bombs.add(bomb);
                 }
                 break;
-            case 1: //坦克向右
-            case 3: //坦克向左
+            case LEFT, RIGHT: //坦克向左向右
                 if (s.x > enemyTank.getX() && s.x < enemyTank.getX() + 60
                         && s.y > enemyTank.getY() && s.y < enemyTank.getY() + 40) {
                     s.isLive = false;

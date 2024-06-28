@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * 敌人的坦克
  */
 public class EnemyTank extends Tank implements Runnable {
-    static Logger logger = Logger.getLogger("EnemyTank");  // 类名或应用名作为日志记录器的名称
+    static Logger logger = Logger.getLogger(EnemyTank.class.getName());  // 类名或应用名作为日志记录器的名称
     Vector<EnemyTank> enemyTanks = new Vector<>();
 
     //这里提供一个方法，可以将MyPanel 的成员 Vector<EnemyTank> enemyTanks = new Vector<>();
@@ -34,7 +34,7 @@ public class EnemyTank extends Tank implements Runnable {
 
             //根据坦克的方向来继续移动
             switch (getDirect()) {
-                case 0:  //向上
+                case UP:  //向上
                     //让坦克保持一个方向，走30步
                     for (int i = 0; i < 30; i++) {
                         if (getY() > 0 && isTouchEnemyTank()) {
@@ -49,7 +49,7 @@ public class EnemyTank extends Tank implements Runnable {
                         }
                     }
                     break;
-                case 1:  //向右
+                case RIGHT:  //向右
                     for (int i = 0; i < 30; i++) {
                         if (getX() + 60 < 1000 && isTouchEnemyTank()) {
                             moveRight();
@@ -62,7 +62,7 @@ public class EnemyTank extends Tank implements Runnable {
                         }
                     }
                     break;
-                case 2:  //向下
+                case DOWN:  //向下
                     for (int i = 0; i < 30; i++) {
                         if (getY() + 60 < 750 && isTouchEnemyTank()) {
                             moveDown();
@@ -75,7 +75,7 @@ public class EnemyTank extends Tank implements Runnable {
                         }
                     }
                     break;
-                case 3:  //向左
+                case LEFT:  //向左
                     for (int i = 0; i < 30; i++) {
                         if (getX() > 0 && isTouchEnemyTank()) {
                             moveLeft();
@@ -90,8 +90,8 @@ public class EnemyTank extends Tank implements Runnable {
                     break;
             }
 
-            // 然后随机的改变坦克方向 0-3
-            setDirect((int) (Math.random() * 4));
+            // 然后随机的改变坦克方向
+            getRandomDirection();
             // 写并发程序，一定要考虑清楚，该线程什么时候结束
             if (!isLive) {
                 break; //退出线程
@@ -104,14 +104,14 @@ public class EnemyTank extends Tank implements Runnable {
     public boolean isTouchEnemyTank() {
         // 判断当前敌人坦克(this)方向
         switch (this.getDirect()) {
-            case 0: //上
+            case UP: //上
                 for (int i = 0; i < enemyTanks.size(); i++) {
                     EnemyTank enemyTank = enemyTanks.get(i);
                     if (enemyTank != this) {
                         //如果敌人坦克是上/下
                         //1. 如果敌人坦克是上/下 x的范围 [enemyTank.getX(), enemyTank.getX() + 40]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 60]
-                        if (enemyTank.getDirect() == 0 || enemyTank.getDirect() == 2) {
+                        if (enemyTank.getDirect() == Directions.UP || enemyTank.getDirect() == Directions.DOWN) {
                             //2. 当前坦克 左上角的坐标 [this.getX(), this.getY()]
                             if (this.getX() >= enemyTank.getX()
                                     && this.getX() <= enemyTank.getX() + 40
@@ -130,7 +130,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //如果敌人坦克是 右/左
                         //1. 如果敌人坦克是右/左  x的范围 [enemyTank.getX(), enemyTank.getX() + 60]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 40]
-                        if (enemyTank.getDirect() == 1 || enemyTank.getDirect() == 3) {
+                        if (enemyTank.getDirect() == Directions.RIGHT || enemyTank.getDirect() == Directions.LEFT) {
                             //2. 当前坦克 左上角的坐标 [this.getX(), this.getY()]
                             if (this.getX() >= enemyTank.getX()
                                     && this.getX() <= enemyTank.getX() + 60
@@ -150,7 +150,7 @@ public class EnemyTank extends Tank implements Runnable {
 
                 }
                 break;
-            case 1: //右
+            case RIGHT: //右
                 //让当前敌人坦克和其它所有的敌人坦克比较
                 for (int i = 0; i < enemyTanks.size(); i++) {
                     //从vector 中取出一个敌人坦克
@@ -160,7 +160,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //如果敌人坦克是上/下
                         //1. 如果敌人坦克是上/下 x的范围 [enemyTank.getX(), enemyTank.getX() + 40]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 60]
-                        if (enemyTank.getDirect() == 0 || enemyTank.getDirect() == 2) {
+                        if (enemyTank.getDirect() == Directions.UP || enemyTank.getDirect() == Directions.DOWN) {
                             //2. 当前坦克 右上角的坐标 [this.getX() + 60, this.getY()]
                             if (this.getX() + 60 >= enemyTank.getX()
                                     && this.getX() + 60 <= enemyTank.getX() + 40
@@ -179,7 +179,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //如果敌人坦克是 右/左
                         //1. 如果敌人坦克是右/左  x的范围 [enemyTank.getX(), enemyTank.getX() + 60]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 40]
-                        if (enemyTank.getDirect() == 1 || enemyTank.getDirect() == 3) {
+                        if (enemyTank.getDirect() == Directions.RIGHT || enemyTank.getDirect() == Directions.LEFT) {
                             //2. 当前坦克 右上角的坐标 [this.getX() + 60, this.getY()]
                             if (this.getX() + 60 >= enemyTank.getX()
                                     && this.getX() + 60 <= enemyTank.getX() + 60
@@ -198,7 +198,7 @@ public class EnemyTank extends Tank implements Runnable {
                     }
                 }
                 break;
-            case 2: //下
+            case DOWN: //下
                 //让当前敌人坦克和其它所有的敌人坦克比较
                 for (int i = 0; i < enemyTanks.size(); i++) {
                     //从vector 中取出一个敌人坦克
@@ -209,7 +209,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //1. 如果敌人坦克是上/下 x的范围 [enemyTank.getX(), enemyTank.getX() + 40]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 60]
 
-                        if (enemyTank.getDirect() == 0 || enemyTank.getDirect() == 2) {
+                        if (enemyTank.getDirect() == Directions.UP || enemyTank.getDirect() == Directions.DOWN) {
                             //2. 当前坦克 左下角的坐标 [this.getX(), this.getY() + 60]
                             if (this.getX() >= enemyTank.getX()
                                     && this.getX() <= enemyTank.getX() + 40
@@ -228,7 +228,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //如果敌人坦克是 右/左
                         //1. 如果敌人坦克是右/左  x的范围 [enemyTank.getX(), enemyTank.getX() + 60]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 40]
-                        if (enemyTank.getDirect() == 1 || enemyTank.getDirect() == 3) {
+                        if (enemyTank.getDirect() == Directions.RIGHT || enemyTank.getDirect() == Directions.LEFT) {
                             //2. 当前坦克 左下角的坐标 [this.getX(), this.getY() + 60]
                             if (this.getX() >= enemyTank.getX()
                                     && this.getX() <= enemyTank.getX() + 60
@@ -247,7 +247,7 @@ public class EnemyTank extends Tank implements Runnable {
                     }
                 }
                 break;
-            case 3: //左
+            case LEFT: //左
                 //让当前敌人坦克和其它所有的敌人坦克比较
                 for (int i = 0; i < enemyTanks.size(); i++) {
                     //从vector 中取出一个敌人坦克
@@ -258,7 +258,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //1. 如果敌人坦克是上/下 x的范围 [enemyTank.getX(), enemyTank.getX() + 40]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 60]
 
-                        if (enemyTank.getDirect() == 0 || enemyTank.getDirect() == 2) {
+                        if (enemyTank.getDirect() == Directions.UP || enemyTank.getDirect() == Directions.DOWN) {
                             //2. 当前坦克 左上角的坐标 [this.getX(), this.getY() ]
                             if (this.getX() >= enemyTank.getX()
                                     && this.getX() <= enemyTank.getX() + 40
@@ -277,7 +277,7 @@ public class EnemyTank extends Tank implements Runnable {
                         //如果敌人坦克是 右/左
                         //1. 如果敌人坦克是右/左  x的范围 [enemyTank.getX(), enemyTank.getX() + 60]
                         //                     y的范围 [enemyTank.getY(), enemyTank.getY() + 40]
-                        if (enemyTank.getDirect() == 1 || enemyTank.getDirect() == 3) {
+                        if (enemyTank.getDirect() == Directions.RIGHT || enemyTank.getDirect() == Directions.LEFT) {
                             //2. 当前坦克 左上角的坐标 [this.getX(), this.getY() ]
                             if (this.getX() >= enemyTank.getX()
                                     && this.getX() <= enemyTank.getX() + 60

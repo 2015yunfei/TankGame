@@ -1,9 +1,11 @@
+import java.util.Random;
 import java.util.Vector;
 
 public class Tank {
     private int x;
     private int y;
-    private int direct; // direct 表示方向(0:向上 1:向右 2:向下 3:向左)
+
+    private Directions direct;
     private int speed = 8;
     boolean isLive = true;
 
@@ -38,6 +40,16 @@ public class Tank {
     public Tank(int x, int y) {
         this.x = x;
         this.y = y;
+        getRandomDirection();
+    }
+
+    public void getRandomDirection(){
+        // 创建Random对象
+        Random random = new Random();
+        // 生成随机索引
+        int randomIndex = random.nextInt(Directions.values().length);
+        // 使用随机索引获取枚举值
+        this.direct = Directions.values()[randomIndex];
     }
 
     public int getX() {
@@ -56,11 +68,11 @@ public class Tank {
         this.y = y;
     }
 
-    public int getDirect() {
+    public Directions getDirect() {
         return direct;
     }
 
-    public void setDirect(int direct) {
+    public void setDirect(Directions direct) {
         this.direct = direct;
     }
 }
