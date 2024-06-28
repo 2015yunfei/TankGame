@@ -22,6 +22,11 @@ public class EnemyTank extends Tank implements Runnable {
         this.setSpeed(4);
     }
 
+    public EnemyTank() {
+        super();
+        this.setSpeed(4);
+    }
+
     @Override
     public void run() {
         while (true) {

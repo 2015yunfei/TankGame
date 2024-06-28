@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @date ：Created in 2024/6/9 10:21
  */
 public class TankGame01 extends JFrame {
-    MyPanel mp = null;
+    MyPanel mp;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -16,7 +16,6 @@ public class TankGame01 extends JFrame {
     }
 
     public TankGame01() {
-        Scanner scanner = new Scanner(System.in);
         String key;
 
         while (true) {

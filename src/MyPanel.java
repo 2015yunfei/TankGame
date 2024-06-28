@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class MyPanel extends JPanel implements KeyListener, Runnable {
     private static final Logger logger = Logger.getLogger(MyPanel.class.getName());
-
+    static Scanner scanner = new Scanner(System.in);
     //定义一个存放Node 对象的Vector, 用于恢复敌人坦克的坐标和方向
     Vector<Node> nodes = new Vector<>();
 
@@ -60,10 +61,12 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
 
         switch (key) {
             case "1":
+                System.out.println("请输入初始坦克的数量：");
+                this.enemyTankSize = scanner.nextInt();
                 //初始化敌人坦克
                 for (int i = 0; i < enemyTankSize; i++) {
                     //创建一个敌人的坦克
-                    EnemyTank enemyTank = new EnemyTank((100 * (i + 1)), 0);
+                    EnemyTank enemyTank = new EnemyTank();
                     //将 enemyTanks 设置给 enemyTank !!!
                     enemyTank.setEnemyTanks(enemyTanks);
                     //启动敌人坦克线程，让他动起来

@@ -43,6 +43,15 @@ public class Tank {
         getRandomDirection();
     }
 
+    public Tank() {
+        // 创建 Random 对象用于生成随机数
+        Random random = new Random();
+
+        this.x = random.nextInt(1001); // 1001 是因为 nextInt(n) 会生成 0 到 n-1 之间的随机数
+        this.y = random.nextInt(751); // 751 同理
+        getRandomDirection();
+    }
+
     public void getRandomDirection(){
         // 创建Random对象
         Random random = new Random();
